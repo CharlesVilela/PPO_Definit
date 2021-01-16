@@ -2,18 +2,12 @@ import { Request, Response, NextFunction } from 'express';
 import statusCode from '../config/statusCode';
 import jwt, { decode } from 'jsonwebtoken';
 
-import log from '../routes/login';
-
-
 const validarAutenticacao = (req: Request, res: Response, next: NextFunction) => {
     const autorizar = req.headers.authorization;
-
     
+    if (!autorizar) 
+      return res.status(statusCode.unauthorized).send('No token autorized');
 
-    if (!autorizar)
-    return res.status(statusCode.unauthorized).send('No token autorized');
-
-    
     const partes = autorizar.split(' ');
   
       if (partes.length != 2)
