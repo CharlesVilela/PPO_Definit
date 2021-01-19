@@ -20,12 +20,14 @@ const brokerSchema = new Schema({
     numeroIp:{
         type: String,
         required: true,
-        lowercase: true
+        lowercase: true,
+        unique: true
     },
     porta:{
         type: Number,
         required: true,
-        lowercase: true
+        lowercase: true,
+        unique: true
     },
     clear:{
         type: Boolean,

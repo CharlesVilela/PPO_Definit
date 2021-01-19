@@ -2,6 +2,9 @@ import Usuario from '../model/Usuario';
 import { Request, Response } from 'express';
 
 import statusCode from '../config/statusCode';
+import Broker from '../model/Broker';
+import Topico from '../model/Topico';
+import Dispositivo from '../model/Dispositivo';
 
 class UsuarioController {
 
@@ -68,9 +71,7 @@ class UsuarioController {
         try {
             const { id } = req.params;
             const usuario = await Usuario.findByIdAndDelete(id);
-
             return res.status(statusCode.success).send('Usuario Deletado com sucesso!');
-
         } catch (error) {
             return res.status(statusCode.error).send('Error ao deletar usuario!');
         }

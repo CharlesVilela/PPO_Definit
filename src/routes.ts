@@ -24,7 +24,7 @@ routes.delete('/usuario/deletar/:id', UsuarioController.Deletar); // O ID utiliz
 
 // ROUTES BROKER
 routes.post('/broker/cadastrar/:id', BrokerController.Cadastrar); // O ID utilizado nesta rota para realizar o CADASTRO do BROKER é o ID do USUÁRIO
-routes.get('/broker/listar', BrokerController.ListarTodos);
+routes.get('/broker/listar/:id', BrokerController.ListarTodos); // O ID utilizado nesta rota para realizar o LISTARTODOS do BROKER é o ID do USUÁRIO
 routes.get('/broker/buscar/:id', BrokerController.BuscarPorId); // O ID utilizado nesta rota para realizar a BUSCA é o ID do BROKER
 routes.put('/broker/atualizar/:id', BrokerController.Atualizar); // O ID utilizado nesta rota para ATUALIZAR é o ID do BROKER
 routes.delete('/broker/deletar/:id', BrokerController.Deletar); // O ID utilizado nesta rota para DELETAR é o ID do BROKER
@@ -32,7 +32,7 @@ routes.delete('/broker/deletar/:id', BrokerController.Deletar); // O ID utilizad
 
 // ROUTES TOPICO
 routes.post('/topico/cadastrar/:id', TopicoController.Cadastrar); // O ID utilizado nesta rota para realizar o CADASTRO do TÓPICO é o ID do USUÁRIO
-routes.get('/topico/listar', TopicoController.ListarTodos);
+routes.get('/topico/listar/:id', TopicoController.ListarTodos); // O ID utilizado nesta rota para realizar o LISTARTODOS do TÓPICO é o ID do USUÁRIO
 routes.get('/topico/buscar/:id', TopicoController.BuscarPorId); // O ID utilizado nesta rota para realizar a BUSCA é o ID do TÓPICO
 routes.put('/topico/atualizar/:id', TopicoController.Atualizar); // O ID utilizado nesta rota para ATUALIZAR é o ID do TÓPICO
 routes.delete('/topico/deletar/:id', TopicoController.Deletar); // O ID utilizado nesta rota para DELETAR é o ID do TÓPICO
@@ -40,7 +40,7 @@ routes.delete('/topico/deletar/:id', TopicoController.Deletar); // O ID utilizad
 
 // ROUTES DISPOSITIVO
 routes.post('/dispositivo/cadastrar/:id', DispositivoController.Cadastrar); // O ID utilizado nesta rota para realizar o CADASTRO do DISPOSITIVO é o ID do USUÁRIO
-routes.get('/dispositivo/listar', DispositivoController.Listar);
+routes.get('/dispositivo/listar/:id', DispositivoController.Listar); // O ID utilizado nesta rota para realizar o LISTARTODOS do DISPOSITIVO é o ID do USUÁRIO
 routes.get('/dispositivo/buscar/:id', DispositivoController.Buscar); // O ID utilizado nesta rota para realizar a BUSCA é o ID do DISPOSITIVO
 routes.put('/dispositivo/atualizar/:id', DispositivoController.Atualizar); // O ID utilizado nesta rota para ATUALIZAR é o ID do DISPOSITIVO
 routes.delete('/dispositivo/deletar/:id', DispositivoController.Deletar); // O ID utilizado nesta rota para DELETAR é o ID do DISPOSITIVO

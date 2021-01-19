@@ -4,17 +4,20 @@ import Topico from '../model/Topico';
 import Broker from '../model/Broker';
 
 import statusCode from '../config/statusCode';
+import Usuario from "../model/Usuario";
 
 class TopicoController {
 
     public async Cadastrar(req: Request, res: Response){
         try {
             const { id } = req.params;
-            const { nome } = req.body;
+            const { nome, porta } = req.body;
             const newTopico = new Topico({ nome: nome, usuario: id });
             await Topico.create(newTopico);
     
-            await Broker.findOneAndUpdate({ usuario: id }, { $push: { topico: newTopico } });
+            await Broker.findOneAndUpdate({ porta: porta }, { $push: { topico: newTopico } });
+
+            
     
             return res.status(statusCode.success).json({ newTopico });
         } catch (error) {
@@ -24,7 +27,8 @@ class TopicoController {
 
     public async ListarTodos(req: Request, res: Response){
         try {
-            const topicos = await Topico.find().populate('usuario');
+            const { id } = req.params;
+            const topicos = await Topico.find( { usuario: id } ).populate('usuario');
             if(topicos == null){
                 return res.status(statusCode.success).send('Não tem topico cadastrado!');
             }else{

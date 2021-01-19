@@ -20,8 +20,8 @@ class BrokerController {
 
     public async ListarTodos(req: Request, res: Response) {
         try {
-            //const brokers = await Broker.find().populate(['usuario', 'topico']);
-            const brokers = await Broker.find();
+            const { id } = req.params;
+            const brokers = await Broker.find({ usuario: id });
             return res.status(statusCode.success).json({ brokers });
         } catch (error) {
             return res.status(statusCode.error).send('Error listen Brokers');

@@ -22,7 +22,8 @@ class DispositivoController {
 
     public async Listar(req: Request, res: Response){
         try {
-            const dispositivos = await Dispositivo.find().populate('inscricoes');
+            const { id } = req.params;
+            const dispositivos = await Dispositivo.find({ usuario: id }).populate('inscricoes');
             return res.status(statusCode.success).json(dispositivos);
         } catch (error) {
             return res.status(statusCode.error).send('Error ao listar Dispositivo!');
