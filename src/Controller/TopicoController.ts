@@ -5,7 +5,7 @@ import Broker from '../model/Broker';
 
 import statusCode from '../config/statusCode';
 import Usuario from "../model/Usuario";
-
+import autoMidlewares from '../middlewares/auth';
 class TopicoController {
 
     public async Cadastrar(req: Request, res: Response){

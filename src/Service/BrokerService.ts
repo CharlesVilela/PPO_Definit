@@ -1,78 +1,31 @@
-import { Request, Response } from 'express';
-import mqtt from 'mqtt';
-import { prototype } from 'nodemailer/lib/dkim';
-import statusCode from '../config/statusCode';
+import { request, Request, Response } from "express";
+import mosca from "mosca";
+import mqtt, { Packet } from "mqtt";
+import statusCode from "../config/statusCode";
+import Broker from "../model/Broker";
 
-import Broker from '../model/Broker';
-import Dispositivo from '../model/Dispositivo';
-import Topico from '../model/Topico';
+const conectar = async (req: Request, res: Response) => {
+    try {
+        const { porta } = req.body;
+        const buscarBroker = await Broker.findOne({ porta: porta });
 
-interface Broker {
-    id: string;
-    numeroIp: string;
-    porta: number;
-    clean: boolean;
-    payload: string;
-    qos: mqtt.QoS;
-    retain: boolean;
-    usuario: string;
-}
+        if (buscarBroker == null) return res.status(statusCode.bad).send("Broker não encontrado!");
 
-class ConectarBroker {
+        let setting = { port: buscarBroker.porta };
+        let broker = new mosca.Server(setting);
 
-    public async Conectar(req: Request, res: Response) {
-        try {
-            const { id } = req.params;
-            const { numeroIp } = req.body;
-            const broker = await Broker.findOne({ numeroIp: numeroIp, usuario: id });
+        broker.on('ready', () => {
+            return res.status(statusCode.success).send("Broker ready!")
+        })
 
-            if (broker == null) return res.status(statusCode.bad).send('Não foi possivel conectar ao broker, Broker vazio');
-
-            const opitions = {
-                porta: broker.porta,
-                host: broker.numeroIp,
-                QoS: broker.qos,
-                clean: broker.clean,
-                rejeitarUnauthorized: true,
-                protocolo: mqtt
-            }
-
-            const client = mqtt.connect(opitions);
-
-            return res.status(statusCode.success).send("Chegou aqui antes do metodo");
-
-        } catch (error) {
-            return res.status(statusCode.error).send('Ocorreu um error ao conectar ao Broker!');
-        }
-    }
-
-    public async Subscriber(req: Request, res: Response) {
-        try {
-            const { id } = req.params;
-            const { nomeTopico } = req.body;
-            const topico = await Topico.findOne({ nome: nomeTopico });
-
-            await Dispositivo.findByIdAndUpdate(id, { $push: { inscricoes: topico } });
-
-            if (topico == null) return res.status(statusCode.bad).send('Não foi encontrado nenhum topico para se inscreer!');
-
-            return res.status(statusCode.success).send("Inscrição realizada com sucesso!");
-        } catch (error) {
-            return res.status(statusCode.error).send('Ocorreu um error ao subscrever no Topico!');
-        }
-    }
-
-    public async Publisher(req: Request, res: Response) {
-        try {
-            const { id } = req.params;
-            const { mensagem } = req.body;
-            const topico = await Topico.findByIdAndUpdate(id, { $push: { mensagem: mensagem } });
-
-            return res.status(statusCode.success).json(topico);
-        } catch (error) {
-            return res.status(statusCode.error).send('Ocorreu um error ao publicar no Topico!');
-        }
+        const outroPackage = { package: mosca };
+        broker.on('published', (outroPackage) => {
+            const message = outroPackage.payload.toString();
+            return res.json(message);
+        })
+    } catch (error) {
+        return res.status(statusCode.error).send('Error ao conectar!');
     }
 }
 
-export default new ConectarBroker;
+export default conectar;

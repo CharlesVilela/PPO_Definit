@@ -11,11 +11,16 @@ import DispositivoController from './Controller/DispositivoController';
 import LogarService from './Service/LoginService';
 import BrokerService from './Service/BrokerService';
 
+import autoMidlewares from './middlewares/auth';
+
 
 const routes = Router();
 
 // ROUTES USUARIO
 routes.post('/usuario/cadastrar', UsuarioController.Cadastrar);
+
+routes.use(autoMidlewares);
+
 routes.get('/usuario/listar', UsuarioController.ListarTodos);
 routes.get('/usuario/buscar/:id', UsuarioController.BuscarPorId); // O ID utilizado nesta Rota para BUSCAR é o ID do USUÁRIO
 routes.put('/usuario/atualizar/:id', UsuarioController.Atualizar); // O ID utilizado nesta Rota para ATUALIZAR é o ID do USUÁRIO
@@ -49,9 +54,9 @@ routes.delete('/dispositivo/deletar/:id', DispositivoController.Deletar); // O I
 // ROUTES DOS SERVICES COMO LOGIN E RECUPERAÇÃO DE SENHA
 routes.post('/logar', LogarService.Logar);
 routes.post('/recuperarSenha', LogarService.RecuperarSenha);
-routes.post('/conectarBroker/:id', BrokerService.Conectar); // O ID utilizado nesta rota para realizar a CONEXÃO do BROKER é o ID do USUÁRIO
-routes.post('/subscriber/:id', BrokerService.Subscriber); // O ID utilizado nesta rota para realizar o SUBSCRIBER no TOPICO é O ID do DISPOSITIVO
-routes.post('/publisher/:id', BrokerService.Publisher); // O ID utilizado nesta rota para PUBLICAR é o ID do TÓPICO
+routes.post('/conectarBroker', BrokerService); // O ID utilizado nesta rota para realizar a CONEXÃO do BROKER é o ID do USUÁRIO
+//routes.post('/subscriber/:id', BrokerService.Subscriber); // O ID utilizado nesta rota para realizar o SUBSCRIBER no TOPICO é O ID do DISPOSITIVO
+//routes.post('/publisher/:id', BrokerService.Publisher); // O ID utilizado nesta rota para PUBLICAR é o ID do TÓPICO
 
 
 
