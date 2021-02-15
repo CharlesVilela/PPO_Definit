@@ -20,7 +20,7 @@ const routes = Router();
 // ROUTES USUARIO
 routes.post('/usuario/cadastrar', UsuarioController.Cadastrar);
 
-routes.use(autoMidlewares); // UTILIZANDO O GERADOR DO TOKEN. DESTA LINHA PARA BAIXO SÓ SERÁ UTILIZADA SE TIVER O TOKEN DE AUTENTICAÇÃO.
+//routes.use(autoMidlewares); // UTILIZANDO O GERADOR DO TOKEN. DESTA LINHA PARA BAIXO SÓ SERÁ UTILIZADA SE TIVER O TOKEN DE AUTENTICAÇÃO.
 
 routes.get('/usuario/listar', UsuarioController.ListarTodos);
 routes.get('/usuario/buscar/:id', UsuarioController.BuscarPorId); // O ID utilizado nesta Rota para BUSCAR é o ID do USUÁRIO
@@ -55,9 +55,9 @@ routes.delete('/dispositivo/deletar/:id', DispositivoController.Deletar); // O I
 // ROUTES DOS SERVICES COMO LOGIN E RECUPERAÇÃO DE SENHA
 routes.post('/logar', LogarService.Logar);
 routes.post('/recuperarSenha', LogarService.RecuperarSenha);
-routes.post('/conectarBroker', BrokerService); // O ID utilizado nesta rota para realizar a CONEXÃO do BROKER é o ID do USUÁRIO
-//routes.post('/subscriber/:id', BrokerService.Subscriber); // O ID utilizado nesta rota para realizar o SUBSCRIBER no TOPICO é O ID do DISPOSITIVO
-//routes.post('/publisher/:id', BrokerService.Publisher); // O ID utilizado nesta rota para PUBLICAR é o ID do TÓPICO
+routes.post('/conectarBroker/:id', BrokerService.conectar); // O ID utilizado nesta rota para realizar a CONEXÃO do BROKER é o ID do USUÁRIO
+routes.post('/subscriber/:id', BrokerService.Subscriber); // O ID utilizado nesta rota para realizar o SUBSCRIBER no TOPICO é O ID do DISPOSITIVO
+routes.post('/publisher/:id', BrokerService.Publisher); // O ID utilizado nesta rota para PUBLICAR é o ID do TÓPICO
 
 
 

@@ -5,7 +5,6 @@ import Broker from '../model/Broker';
 
 import statusCode from '../config/statusCode';
 import Usuario from "../model/Usuario";
-import autoMidlewares from '../middlewares/auth';
 class TopicoController {
 
     public async Cadastrar(req: Request, res: Response){
@@ -16,9 +15,7 @@ class TopicoController {
             await Topico.create(newTopico);
     
             await Broker.findOneAndUpdate({ porta: porta }, { $push: { topico: newTopico } });
-
             
-    
             return res.status(statusCode.success).json({ newTopico });
         } catch (error) {
             return res.status(statusCode.error).send('Error created Topico');
