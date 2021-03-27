@@ -24,7 +24,7 @@ class Application {
     }
 
     settings() {
-        this.app.set('port', 3000);
+        this.app.set('port', 3100);
         this.app.set('views', path.join(__dirname, 'views'));
         this.app.engine('.hbs', exphbs({
             handlebars: allowInsecurePrototypeAccess(handlebars),
