@@ -77,13 +77,15 @@ class CanalController {
         }
     }
 
-    //Falta acabar de criar. Não está funcionando como deveria
     public async DeletarTopicos( req: Request, res: Response ){
         try {
             const { id } = req.params;
             const { nomeTopico } = req.body;
-            const topico = await Topico.find({ nome: nomeTopico });
-            await Canal.findOneAndUpdate({ topicos: topico }, { $pull: { topicos: topico } });
+            const topico = await Topico.findOne({ nome: nomeTopico });
+
+            if (topico == null) return res.status(StatusCode.not_found).send('Topico não encontrado!');
+
+            await Canal.findByIdAndUpdate(id, { $pull: { topicos: topico.id } });
             return res.status(StatusCode.success).send('Topico removido com sucesso!');
         } catch (error) {
             return res.status(StatusCode.error).send('Ocorreu um ERROR em Remover o Topico a Canal!');
