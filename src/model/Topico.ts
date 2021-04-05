@@ -10,7 +10,8 @@ interface topicoInterface extends Document {
 const topicoSchema = new Schema ({
     nome:{
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     mensagem:[{
         type: String
@@ -18,6 +19,11 @@ const topicoSchema = new Schema ({
     usuario: {
         type: Schema.Types.ObjectId,
         ref: 'Usuario',
+        required: true
+    },
+    dataHoraRegistro: {
+        type: Date,
+        default: Date.now,
         required: true
     }
 });

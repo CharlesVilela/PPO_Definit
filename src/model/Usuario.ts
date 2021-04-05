@@ -25,8 +25,14 @@ interface usuarioInterface extends Document {
         type: String,
         required: [true, 'A senha é obrigatória'],
         lowercase: true,
-        minlength: [8, 'A senha não pode ter menos que 8 caracteres'],  
+        minlength: [8, 'A senha não pode ter menos que 8 caracteres'],
+        maxlength: [16, 'A senha não pode ter mais que 16 caracteres'],  
         select: true
+    },
+    dataHoraRegistro: {
+        type: Date,
+        default: Date.now,
+        required: true
     }
     });
 

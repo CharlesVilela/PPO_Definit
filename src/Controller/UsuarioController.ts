@@ -12,8 +12,15 @@ class UsuarioController {
         try {
             const { nomeUsuario, email, senha } = req.body;
             const newUsuario = new Usuario({ nomeUsuario: nomeUsuario, email: email, senha: senha });
-            await Usuario.create(newUsuario);
-            return res.status(statusCode.created).send({ newUsuario });
+
+            const usuario = await Usuario.findOne({ email: email });
+
+            if( usuario != null) { 
+                return res.status(statusCode.conflict).send('Esse Usuario já existe! Tente outro!'); 
+            }else {
+                await Usuario.create(newUsuario);
+                return res.status(statusCode.created).send({ newUsuario });
+            }
         } catch (error) {
             return res.status(statusCode.error).send('Error Created!');
         }
@@ -43,7 +50,7 @@ class UsuarioController {
                 return res.status(statusCode.success).json(usuario);
             }
             else {
-                return res.status(statusCode.success).send('Não tem usuarios cadastrados!');
+                return res.status(statusCode.not_found).send('Não tem usuarios cadastrados!');
             }
         } catch (error) {
             return res.status(statusCode.error).send('Error Listen!');

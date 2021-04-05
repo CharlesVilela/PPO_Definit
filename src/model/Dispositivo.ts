@@ -30,7 +30,12 @@ const DispositivoSchema = new Schema ({
     inscricoes: [{
         type: Schema.Types.ObjectId,
         ref: 'Topico'
-    }]
+    }],
+    dataHoraRegistro: {
+        type: Date,
+        default: Date.now,
+        required: true
+    }
     //canal: [{}]
 });
 

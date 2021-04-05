@@ -59,7 +59,12 @@ const brokerSchema = new Schema({
     topico:[{
         type: Schema.Types.ObjectId,
         ref: 'Topico'
-    }]
+    }],
+    dataHoraRegistro: {
+        type: Date,
+        default: Date.now,
+        required: true
+    }
 }
 )
 

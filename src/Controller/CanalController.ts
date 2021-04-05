@@ -6,19 +6,25 @@ import Topico from '../model/Topico';
 
 class CanalController {
 
-    public async Cadastrar( req: Request, res: Response){
-      try {
-        const { id } = req.params;
-        const { nome, tipo, historico, leituraOuEscrita } = req.body;
-        const newCanal = new Canal({nome: nome, tipo: tipo, historico: historico, leituraOuEscrita: leituraOuEscrita, usuario: id });
-        newCanal.save();
-        return res.status(StatusCode.success).json(newCanal);
-      } catch (error) {
-          return res.status(StatusCode.error).send('Ocorreu um ERROR ao cadastrar Canal!');
-      }
+    public async Cadastrar(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const { nome, tipo, historico, leituraOuEscrita } = req.body;
+
+            const canal = await Canal.findOne({ nome: nome });
+            if (canal != null) {
+                return res.status(StatusCode.conflict).send('Esse Canal já existe! Tente outro!');
+            } else {
+                const newCanal = new Canal({ nome: nome, tipo: tipo, historico: historico, leituraOuEscrita: leituraOuEscrita, usuario: id });
+                newCanal.save();
+                return res.status(StatusCode.success).json(newCanal);
+            }
+        } catch (error) {
+            return res.status(StatusCode.error).send('Ocorreu um ERROR ao cadastrar Canal!');
+        }
     }
 
-    public async Listar( req: Request, res: Response ){
+    public async Listar(req: Request, res: Response) {
         try {
             const { id } = req.params;
             const canais = await Canal.find({ usuario: id });
@@ -31,7 +37,7 @@ class CanalController {
         }
     }
 
-    public async BuscarPorID( req: Request, res: Response ){
+    public async BuscarPorID(req: Request, res: Response) {
         try {
             const { id } = req.params;
             const canal = await Canal.findById(id);
@@ -44,18 +50,18 @@ class CanalController {
         }
     }
 
-    public async Atualizar( req: Request, res: Response){
+    public async Atualizar(req: Request, res: Response) {
         try {
-          const { id } = req.params;
-          const { nome, tipo, historico, leituraOuEscrita } = req.body;
-          await Canal.findByIdAndUpdate(id, {nome: nome, tipo: tipo, historico: historico, leituraOuEscrita: leituraOuEscrita });
-          return res.status(StatusCode.success).send('Canal atualizado com sucesso!');
+            const { id } = req.params;
+            const { nome, tipo, historico, leituraOuEscrita } = req.body;
+            await Canal.findByIdAndUpdate(id, { nome: nome, tipo: tipo, historico: historico, leituraOuEscrita: leituraOuEscrita });
+            return res.status(StatusCode.success).send('Canal atualizado com sucesso!');
         } catch (error) {
             return res.status(StatusCode.error).send('Ocorreu um ERROR em Atualizar Canal!');
         }
-      }
+    }
 
-      public async Deletar( req: Request, res: Response ){
+    public async Deletar(req: Request, res: Response) {
         try {
             const { id } = req.params;
             await Canal.findByIdAndDelete(id);
@@ -65,19 +71,19 @@ class CanalController {
         }
     }
 
-    public async AdicionarTopicos( req: Request, res: Response ){
+    public async AdicionarTopicos(req: Request, res: Response) {
         try {
             const { id } = req.params;
             const { nomeTopico } = req.body;
             const topico = await Topico.findOne({ nome: nomeTopico });
-            await Canal.findByIdAndUpdate(id, { $addToSet: { topicos: topico }  });
+            await Canal.findByIdAndUpdate(id, { $addToSet: { topicos: topico } });
             return res.status(StatusCode.success).send('Topico adicionado com sucesso!');
         } catch (error) {
             return res.status(StatusCode.error).send('Ocorreu um ERROR em Adicionar o Topico a Canal!');
         }
     }
 
-    public async DeletarTopicos( req: Request, res: Response ){
+    public async DeletarTopicos(req: Request, res: Response) {
         try {
             const { id } = req.params;
             const { nomeTopico } = req.body;

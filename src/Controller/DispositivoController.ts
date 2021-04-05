@@ -11,16 +11,21 @@ class DispositivoController {
             const { id } = req.params;
             const { nome, descricao, caracteristica, tipo } = req.body;
 
-            const dispositivo = new Dispositivo({ nome: nome, descricao: descricao, caracteristica: caracteristica, tipo: tipo, usuario: id });
-            await Dispositivo.create(dispositivo);
+            const VerificarDispositivo = await Dispositivo.findOne({ nome: nome });
+            if (VerificarDispositivo != null) {
+                return res.status(statusCode.conflict).send('Esse Dispositivo já existe! Tente outro!');
+            } else {
+                const dispositivo = new Dispositivo({ nome: nome, descricao: descricao, caracteristica: caracteristica, tipo: tipo, usuario: id });
+                await Dispositivo.create(dispositivo);
 
-            return res.status(statusCode.success).json(dispositivo);
+                return res.status(statusCode.success).json(dispositivo);
+            }
         } catch (error) {
             return res.status(statusCode.error).send('Error ao cadastrar Dispositivo!');
         }
     }
 
-    public async Listar(req: Request, res: Response){
+    public async Listar(req: Request, res: Response) {
         try {
             const { id } = req.params;
             const dispositivos = await Dispositivo.find({ usuario: id }).populate('inscricoes');
@@ -30,7 +35,7 @@ class DispositivoController {
         }
     }
 
-    public async Buscar(req: Request, res: Response){
+    public async Buscar(req: Request, res: Response) {
         try {
             const { id } = req.params;
             const dispositivo = await Dispositivo.findById(id);
@@ -40,7 +45,7 @@ class DispositivoController {
         }
     }
 
-    public async Atualizar(req: Request, res: Response){
+    public async Atualizar(req: Request, res: Response) {
         try {
             const { id } = req.params;
             const { nome, descricao, caracteristica, tipo } = req.body;
@@ -53,7 +58,7 @@ class DispositivoController {
         }
     }
 
-    public async Deletar(req: Request, res: Response){
+    public async Deletar(req: Request, res: Response) {
         try {
             const { id } = req.params;
             await Dispositivo.findByIdAndDelete(id);
@@ -63,7 +68,7 @@ class DispositivoController {
         }
     }
 
-    public async Subscrever(){}
+    public async Subscrever() { }
 }
 
 export default new DispositivoController;
