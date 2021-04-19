@@ -2,9 +2,10 @@ import { Schema, model, Document } from 'mongoose';
 
 
 interface usuarioInterface extends Document {
-   nomeUsuario: string
-   email: string
-   senha: string
+   nomeUsuario: string;
+   email: string;
+   senha: string;
+   dataHoraRegistro: Date;
 }
 
  const usuarioSchema = new Schema({ 

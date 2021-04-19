@@ -1,10 +1,11 @@
 import { Schema, model, Document } from 'mongoose';
-import mongoose from '../database';
-import Usuario from '../model/Usuario';
-import Topico from '../model/Topico';
-
 
 import { QoS } from 'mqtt';
+
+
+interface Itopicos extends Document {
+    topicos: string;
+}
 
 interface brokerInterface extends Document {
     numeroIp: string;
@@ -14,6 +15,8 @@ interface brokerInterface extends Document {
     qos: QoS;
     retain: boolean;
     usuario: string;
+    topicos: Array<Itopicos>;
+    dataHoraRegistro: Date;
 }
 
 const brokerSchema = new Schema({
@@ -56,7 +59,7 @@ const brokerSchema = new Schema({
         ref: 'Usuario',
         required: true 
     },
-    topico:[{
+    topicos:[{
         type: Schema.Types.ObjectId,
         ref: 'Topico'
     }],

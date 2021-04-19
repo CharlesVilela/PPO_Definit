@@ -4,7 +4,8 @@ interface topicoInterface extends Document {
     nome: string;
     mensagem: string;
     usuario: string;
-    broker: string
+    broker: string;
+    dataHoraRegistro: Date;
 }
 
 const topicoSchema = new Schema ({

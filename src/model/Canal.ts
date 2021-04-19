@@ -1,6 +1,19 @@
 import { json } from 'body-parser';
 import {Schema, Document, model} from 'mongoose';
 
+interface Itopicos extends Document {
+    topicos: string;
+}
+
+interface CanalInterface extends Document {
+    nome: string;
+    historico: boolean;
+    topicos: string;
+    leituraOuEscrita: string;
+    usuario: string;
+    dataHoraRegistro: Date;
+}
+
 const CanalSchema = new Schema({
     nome: {
         type: String,
@@ -17,6 +30,18 @@ const CanalSchema = new Schema({
         type: Boolean,
         default: false,
     },
+    historicoPublicacao:[{
+        topico: {
+            type: String
+        },
+        mensagem: {
+            type: String
+        },
+        data: {
+           type: Date,
+           default: Date.now
+        }
+    }],
     leituraOuEscrita: {
         type: String,
         required: true
@@ -24,7 +49,7 @@ const CanalSchema = new Schema({
     topicos: [{
         type: Schema.Types.ObjectId,
         ref: 'Topico',
-        required: false
+        required: true
     }],
     usuario: {
         type: Schema.Types.ObjectId,
@@ -38,4 +63,4 @@ const CanalSchema = new Schema({
     }
 });
 
-export default model('Canal', CanalSchema);
+export default model<CanalInterface>('Canal', CanalSchema);

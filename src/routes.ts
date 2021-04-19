@@ -55,6 +55,8 @@ routes.get('/dispositivo/listar/:id', DispositivoController.Listar); // O ID uti
 routes.get('/dispositivo/buscar/:id', DispositivoController.Buscar); // O ID utilizado nesta rota para realizar a BUSCA é o ID do DISPOSITIVO
 routes.put('/dispositivo/atualizar/:id', DispositivoController.Atualizar); // O ID utilizado nesta rota para ATUALIZAR é o ID do DISPOSITIVO
 routes.delete('/dispositivo/deletar/:id', DispositivoController.Deletar); // O ID utilizado nesta rota para DELETAR é o ID do DISPOSITIVO
+routes.put('/dispositivo/adicionarCanal', DispositivoController.AdicionarCanal);
+routes.put('/dispositivo/deletarCanal/:id', DispositivoController.DeletarCanal); // O ID utilizado nesta rota para REMOVER o CANAL é o ID do DISPOSITIVO
 
 // ROUTES CANAL
 routes.post('/canal/cadastrar/:id', CanalController.Cadastrar); // O ID utilizado nesta rota para realizar o CADASTRO do CANAL é o ID do USUÁRIO

@@ -1,9 +1,20 @@
 import { Schema, Document, model } from 'mongoose';
 
+interface ICanal extends Document {
+    canais: string;
+}
+
+interface Iinscricoes extends Document {
+    inscricoes: string;
+}
 interface DispositivoInterface extends Document {
     nome: string;
     descricao: string;
-    tipo: string
+    tipo: string;
+    usuario: string;
+    inscricoes: Array<Iinscricoes>;
+    canais: Array<ICanal>;
+    dataHoraRegistro: Date;
 }
 
 const DispositivoSchema = new Schema ({
@@ -31,12 +42,15 @@ const DispositivoSchema = new Schema ({
         type: Schema.Types.ObjectId,
         ref: 'Topico'
     }],
+    canais: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Canal'
+    }],
     dataHoraRegistro: {
         type: Date,
         default: Date.now,
         required: true
     }
-    //canal: [{}]
 });
 
 export default model<DispositivoInterface>('Dispositivo', DispositivoSchema);

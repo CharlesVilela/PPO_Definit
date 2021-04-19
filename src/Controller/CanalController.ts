@@ -12,6 +12,7 @@ class CanalController {
             const { nome, tipo, historico, leituraOuEscrita } = req.body;
 
             const canal = await Canal.findOne({ nome: nome });
+
             if (canal != null) {
                 return res.status(StatusCode.conflict).send('Esse Canal já existe! Tente outro!');
             } else {
@@ -76,7 +77,10 @@ class CanalController {
             const { id } = req.params;
             const { nomeTopico } = req.body;
             const topico = await Topico.findOne({ nome: nomeTopico });
-            await Canal.findByIdAndUpdate(id, { $addToSet: { topicos: topico } });
+
+            if(topico == null) return res.status(StatusCode.not_found).send('Topico não encontrado!');
+
+            await Canal.findByIdAndUpdate(id, { $addToSet: { topicos: topico.id } });
             return res.status(StatusCode.success).send('Topico adicionado com sucesso!');
         } catch (error) {
             return res.status(StatusCode.error).send('Ocorreu um ERROR em Adicionar o Topico a Canal!');

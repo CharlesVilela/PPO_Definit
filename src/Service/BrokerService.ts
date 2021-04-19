@@ -5,6 +5,7 @@ import Broker from "../model/Broker";
 
 import Topico from '../model/Topico';
 import Dispositivo from '../model/Dispositivo';
+import Canal from "../model/Canal";
 
 class BrokerServiceConectar {
 
@@ -42,9 +43,9 @@ class BrokerServiceConectar {
             const { nomeTopico } = req.body;
             const topico = await Topico.findOne({ nome: nomeTopico });
 
-            await Dispositivo.findByIdAndUpdate(id, { $push: { inscricoes: topico } });
-
             if (topico == null) return res.status(statusCode.bad).send('Não foi encontrado nenhum topico para se inscreer!');
+
+            await Dispositivo.findByIdAndUpdate(id, { $push: { inscricoes: topico.id } });
 
             return res.status(statusCode.success).send("Inscrição realizada com sucesso!");
         } catch (error) {
@@ -56,12 +57,32 @@ class BrokerServiceConectar {
         try {
             const { id } = req.params;
             const { mensagem } = req.body;
+
             const topico = await Topico.findByIdAndUpdate(id, { $push: { mensagem: mensagem } });
-            return res.status(statusCode.success).json(topico);
+
+            if(topico == null)  return res.status(statusCode.not_found).send('Ocorreu um Topico não encontrado para publicar!');
+
+            const canal = await Canal.findOne({ topicos: topico.id });
+
+            if(canal == null){
+                return res.status(statusCode.not_found).send('Canal não encontrado para publicar!');
+            }else {
+                if(canal.historico == true){
+                    
+                    const historicoPublicacaoCanal = {
+                        topico: topico.nome,
+                        mensagem: mensagem
+                    }
+                    await Canal.findOneAndUpdate({ nome: canal.nome }, { $push: { historicoPublicacao: historicoPublicacaoCanal } });
+                }
+            }
+            return res.status(statusCode.success).send('Publicação realizada com sucesso!');
         } catch (error) {
             return res.status(statusCode.error).send('Ocorreu um error ao publicar no Topico!');
         }
     }
+
+
 
 
 }
