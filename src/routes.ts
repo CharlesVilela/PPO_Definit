@@ -7,6 +7,8 @@ import BrokerController from './Controller/BrokerController';
 import TopicoController from './Controller/TopicoController';
 import DispositivoController from './Controller/DispositivoController';
 import CanalController from './Controller/CanalController';
+import GrupoController from './Controller/GrupoController';
+import TipoDispositivoController from './Controller/TipoDispositivoController';
 
 // IMPORT DOS SERVICES
 import LogarService from './Service/LoginService';
@@ -66,6 +68,22 @@ routes.put('/canal/atualizar/:id', CanalController.Atualizar); // O ID utilizado
 routes.delete('/canal/deletar/:id', CanalController.Deletar); // O ID utilizado nesta rota para DELETAR é o ID do CANAL
 routes.put('/canal/adicionarTopico/:id', CanalController.AdicionarTopicos); // O ID utilizado nesta rota para ADICIONAR é o ID do CANAL
 routes.put('/canal/deletarTopico/:id', CanalController.DeletarTopicos); // O ID utilizado nesta rota para REMOVER é o ID do CANAL
+
+// ROUTES GRUPO
+routes.post('/grupo/cadastrar/:id', GrupoController.Cadastrar); // O ID utilizado nesta rota para realizar o CADASTRO do GRUPO é o ID do USUÁRIO
+routes.get('/grupo/listar/:id', GrupoController.ListarTodos); // O ID utilizado nesta rota para realizar o LISTARTODOS do GRUPO é o ID do USUÁRIO
+routes.get('/grupo/buscar/:id', GrupoController.BuscarPorId); // O ID utilizado nesta rota para BUSCAR é o ID do GRUPO
+routes.put('/grupo/atualizar/:id', GrupoController.Atualizar); // O ID utilizado nesta rota para ATUALIZAR é o ID do GRUPO
+routes.delete('/grupo/deletar/:id', GrupoController.Deletar); // O ID utilizado nesta rota para DELETAR é o ID do GRUPO
+routes.put('/grupo/adicionarDispositivo/:id', GrupoController.AdicionarDispositivo); // O ID utilizado nesta rota para ADICIONAR é o ID do GRUPO
+routes.put('/grupo/deletarDispositivo/:id', GrupoController.DeletarDispositivo); // O ID utilizado nesta rota para REMOVER é o ID do GRUPO
+
+// ROUTES TIPODISPOSITIVO
+routes.post('/tipo/cadastrar/:id', TipoDispositivoController.Cadastrar); // O ID utilizado nesta rota para realizar o CADASTRO do GRUPO é o ID do USUÁRIO
+routes.get('/tipo/listar/:id', TipoDispositivoController.ListarTodos); // O ID utilizado nesta rota para realizar o LISTARTODOS do GRUPO é o ID do USUÁRIO
+routes.get('/tipo/buscar/:id', TipoDispositivoController.BuscarPorId); // O ID utilizado nesta rota para BUSCAR é o ID do TIPODISPOSITIVO
+routes.put('/tipo/atualizar/:id', TipoDispositivoController.Atualizar); // O ID utilizado nesta rota para ATUALIZAR é o ID do TIPODISPOSITIVO
+routes.delete('/tipo/deletar/:id', TipoDispositivoController.Deletar); // O ID utilizado nesta rota para DELETAR é o ID do TIPODISPOSITIVO
 
 
 // ROUTES DOS SERVICES CONECTAR AO BROKER E SUBSCRIBER E PUBLISH

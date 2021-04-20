@@ -81,10 +81,6 @@ class BrokerServiceConectar {
             return res.status(statusCode.error).send('Ocorreu um error ao publicar no Topico!');
         }
     }
-
-
-
-
 }
 
 export default new BrokerServiceConectar();

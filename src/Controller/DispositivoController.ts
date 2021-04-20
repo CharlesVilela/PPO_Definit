@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import Dispositivo from '../model/Dispositivo';
+import TipoDispositivo from '../model/TipoDispositivo';
 
 import statusCode from '../config/statusCode';
 import Canal from '../model/Canal';
@@ -10,7 +11,7 @@ class DispositivoController {
     public async Cadastrar(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            const { nome, descricao, caracteristica, tipo } = req.body;
+            const { nome, descricao, caracteristica, tipo, tipoDispositivo } = req.body;
 
             const VerificarDispositivo = await Dispositivo.findOne({ nome: nome });
             if (VerificarDispositivo != null) {
@@ -18,6 +19,8 @@ class DispositivoController {
             } else {
                 const dispositivo = new Dispositivo({ nome: nome, descricao: descricao, caracteristica: caracteristica, tipo: tipo, usuario: id });
                 await Dispositivo.create(dispositivo);
+
+                await TipoDispositivo.findOneAndUpdate({ nome: tipoDispositivo }, { $push: { dispositivos: dispositivo.id } });
 
                 return res.status(statusCode.success).json(dispositivo);
             }
