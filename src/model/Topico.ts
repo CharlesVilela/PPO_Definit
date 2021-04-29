@@ -14,9 +14,9 @@ const topicoSchema = new Schema ({
         required: true,
         unique: true
     },
-    mensagem:[{
+    mensagem:{
         type: String
-    }],
+    },
     usuario: {
         type: Schema.Types.ObjectId,
         ref: 'Usuario',

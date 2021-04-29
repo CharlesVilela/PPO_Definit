@@ -60,7 +60,7 @@ class TopicoController {
         try {
             const { id } = req.params;
             const { nome } = req.body;
-            const topico = await Topico.findByIdAndUpdate(id, { nome: nome });
+            await Topico.findByIdAndUpdate(id, { nome: nome });
             return res.status(statusCode.success).send('Update success!');
         } catch (error) {
             return res.status(statusCode.error).send('Error Update Broker');

@@ -5,8 +5,8 @@ import nodemailer from 'nodemailer';
             port: 587,
             secure: false,
             auth: {
-                user: "",
-                pass: ""
+                user: "testeppoifpe2021@gmail.com",
+                pass: "#Saranghae"
             }
         });
 

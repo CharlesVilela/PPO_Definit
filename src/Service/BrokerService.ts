@@ -58,7 +58,7 @@ class BrokerServiceConectar {
             const { id } = req.params;
             const { mensagem } = req.body;
 
-            const topico = await Topico.findByIdAndUpdate(id, { $push: { mensagem: mensagem } });
+            const topico = await Topico.findByIdAndUpdate(id, { $set: { mensagem: mensagem } });
 
             if(topico == null)  return res.status(statusCode.not_found).send('Ocorreu um Topico não encontrado para publicar!');
 

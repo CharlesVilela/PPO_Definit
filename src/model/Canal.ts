@@ -20,11 +20,8 @@ const CanalSchema = new Schema({
         required: true
     },
     tipo: {
-        enum: {
-            caracteres: String,
-            inteiros: Number,
-            boleano: Boolean
-        }
+        type: {enum: [String, Number, Boolean, JSON]},
+        default: String
     },
     historico: {
         type: Boolean,
