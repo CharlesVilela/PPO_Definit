@@ -2,10 +2,6 @@ import Usuario from '../model/Usuario';
 import { Request, Response } from 'express';
 
 import statusCode from '../config/statusCode';
-import Broker from '../model/Broker';
-import Topico from '../model/Topico';
-import Dispositivo from '../model/Dispositivo';
-
 class UsuarioController {
 
     public async Cadastrar(req: Request, res: Response) {
@@ -17,7 +13,7 @@ class UsuarioController {
 
             if( usuario != null) { 
                 return res.status(statusCode.conflict).send('Esse Usuario já existe! Tente outro!'); 
-            }else {
+            } else {
                 await Usuario.create(newUsuario);
                 return res.status(statusCode.created).send({ newUsuario });
             }
@@ -79,6 +75,25 @@ class UsuarioController {
             const { id } = req.params;
             const usuario = await Usuario.findByIdAndDelete(id);
             return res.status(statusCode.success).send('Usuario Deletado com sucesso!');
+        } catch (error) {
+            return res.status(statusCode.error).send('Error ao deletar usuario!');
+        }
+    }
+
+    public async ImagemPerfil(req: Request, res: Response){
+        
+        try {
+            const { id } = req.params;
+            const {originalname: name, size, filename: key} = req.file;
+
+            const imagem = {
+                name: name,
+                size: size,
+                url: ""
+            }
+
+            await Usuario.findByIdAndUpdate(id, { imagemPerfil: imagem });
+            return res.status(statusCode.success).send('Adicionado com sucesso!');
         } catch (error) {
             return res.status(statusCode.error).send('Error ao deletar usuario!');
         }

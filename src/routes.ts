@@ -1,5 +1,6 @@
 // IMPORT DAS APIs
 import { Router } from 'express';
+import multer from 'multer';
 
 // IMPORT DOS CONTROLLERS
 import UsuarioController from './Controller/UsuarioController';
@@ -17,6 +18,9 @@ import BrokerService from './Service/BrokerService';
 // IMPORT DO GERADOR DO TOKEN DE AUTENTICAÇÃO
 import autoMidlewares from './middlewares/auth';
 
+// IMPORT DO CONFIG
+import multerConfig from './config/Multer';
+
 
 const routes = Router();
 
@@ -28,7 +32,7 @@ routes.post('/recuperarSenha', LogarService.RecuperarSenha);
 routes.post('/usuario/cadastrar', UsuarioController.Cadastrar);
 
 //routes.use(autoMidlewares); // UTILIZANDO O GERADOR DO TOKEN. DESTA LINHA PARA BAIXO SÓ SERÁ UTILIZADA SE TIVER O TOKEN DE AUTENTICAÇÃO.
-
+routes.patch('/usuario/foto/:id', multer(multerConfig).single('file'), UsuarioController.ImagemPerfil);
 routes.get('/usuario/listar', UsuarioController.ListarTodos);
 routes.get('/usuario/buscar/:id', UsuarioController.BuscarPorId); // O ID utilizado nesta Rota para BUSCAR é o ID do USUÁRIO
 routes.put('/usuario/atualizar/:id', UsuarioController.Atualizar); // O ID utilizado nesta Rota para ATUALIZAR é o ID do USUÁRIO
@@ -68,6 +72,8 @@ routes.put('/canal/atualizar/:id', CanalController.Atualizar); // O ID utilizado
 routes.delete('/canal/deletar/:id', CanalController.Deletar); // O ID utilizado nesta rota para DELETAR é o ID do CANAL
 routes.put('/canal/adicionarTopico/:id', CanalController.AdicionarTopicos); // O ID utilizado nesta rota para ADICIONAR é o ID do CANAL
 routes.put('/canal/deletarTopico/:id', CanalController.DeletarTopicos); // O ID utilizado nesta rota para REMOVER é o ID do CANAL
+routes.get('/canal/exibirHistorico/:id', CanalController.ExibirHistoricoDePublicacao) // O ID utilizado nesta rota para Exibir o HISTORICO DE PUBLICAÇÕES é o ID do CANAL
+
 
 // ROUTES GRUPO
 routes.post('/grupo/cadastrar/:id', GrupoController.Cadastrar); // O ID utilizado nesta rota para realizar o CADASTRO do GRUPO é o ID do USUÁRIO
@@ -90,7 +96,6 @@ routes.delete('/tipo/deletar/:id', TipoDispositivoController.Deletar); // O ID u
 routes.post('/conectarBroker/:id', BrokerService.conectar); // O ID utilizado nesta rota para realizar a CONEXÃO do BROKER é o ID do USUÁRIO
 routes.post('/subscriber/:id', BrokerService.Subscriber); // O ID utilizado nesta rota para realizar o SUBSCRIBER no TOPICO é O ID do DISPOSITIVO
 routes.post('/publisher/:id', BrokerService.Publisher); // O ID utilizado nesta rota para PUBLICAR é o ID do TÓPICO
-
 
 
 export default routes;

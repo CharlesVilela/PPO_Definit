@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import Canal from '../model/Canal';
 import StatusCode from '../config/statusCode';
 import Topico from '../model/Topico';
+import statusCode from '../config/statusCode';
 
 class CanalController {
 
@@ -100,6 +101,19 @@ class CanalController {
         } catch (error) {
             return res.status(StatusCode.error).send('Ocorreu um ERROR em Remover o Topico a Canal!');
         }
+    }
+
+    public async ExibirHistoricoDePublicacao(req: Request, res: Response) {
+
+        const { id } = req.params;
+
+        const canalHistorico = await Canal.findById(id)
+
+        if(canalHistorico == null) return res.status(StatusCode.not_found).send('Canal não encontrado!');
+
+        return res.status(statusCode.success).json(canalHistorico)
+
+
     }
 
 }

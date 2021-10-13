@@ -7,79 +7,73 @@ import Topico from '../model/Topico';
 import Dispositivo from '../model/Dispositivo';
 import Canal from "../model/Canal";
 
+import mosca from "mosca"
+import test_mosca from "../config/test_mosca"
+
+import GerenciarBroker from "../Teste/GerenciarBroker"
+
 class BrokerServiceConectar {
 
     public async conectar(req: Request, res: Response) {
+
         try {
-            const { id } = req.params;
-            const { numeroIp, topico } = req.body;
-            const broker = await Broker.findOne({ numeroIp: numeroIp, usuario: id });
-            const topic = await Topico.findOne({ nome: topico, usuario: id });
+            const { id } = req.params
+            const { numeroIp, topico, mensagem } = req.body
 
-            if (broker == null) return res.status(statusCode.bad).send('Não foi possivel conectar ao broker, Broker não encontrado!');
-            if (topic == null) return res.status(statusCode.bad).send('Não foi possivel conectar ao broker, Topico não encontrado!');
+            const broker = await Broker.findOne({ numeroIp: numeroIp })
+            const buscarTopico = await Topico.findOne({ nome: topico })
 
-            const opitions = {
-                porta: broker.porta,
-                host: broker.numeroIp,
-                QoS: broker.qos,
-                clean: broker.clean,
-                rejeitarUnauthorized: true,
-                protocolo: mqtt
-            }
+            if (broker == null) return res.status(statusCode.not_found).json("Broker Não encontrado")
+            if (buscarTopico == null) return res.status(statusCode.not_found).json("Topico não encontrado")
 
-            const client = mqtt.connect(opitions);
-            client.publish(topic.id, topic.mensagem);
-            return res.status(statusCode.success).send('Conectado!')
+            const cliente = mqtt.connect(broker.numeroIp)
 
+            var brokerState = ''
+            var connected = false
+
+            cliente.on('connect', () => {
+                cliente.subscribe(buscarTopico.nome)
+                Broker.findOneAndUpdate({ numeroIp: numeroIp }, { topicos: buscarTopico.id })
+            })
+
+            cliente.on('connect', async () => {
+                
+                const nome = buscarTopico.nome
+                const mensagens = mensagem
+                
+                cliente.publish(nome, mensagem)
+                await Topico.findByIdAndUpdate(buscarTopico.id, { mensagem: mensagem })
+
+                const topic = { nome: nome, mensagem: mensagens }
+                const canal = await Canal.findOne({ topicos: buscarTopico.id })
+
+                if (canal == null){ 
+                    return res.status(statusCode.not_found).send("Canal não encontrado!") 
+                }else {
+                    if (canal.historico == true){
+                    
+                        const historicoPublicacao = {
+                            topico: nome,
+                            mensagem: mensagem
+                        }
+                       await Canal.findByIdAndUpdate(canal.id,  { $push:  { historicoPublicacao: historicoPublicacao } })
+                    }
+                }            
+
+            })
+
+            return res.status(statusCode.success).json('Conectado com sucesso!')
         } catch (error) {
-            return res.status(statusCode.error).send('Ocorreu um error ao conectar ao Broker!');
+            return res.status(statusCode.error).send('Error in Connection!');
         }
     }
 
     public async Subscriber(req: Request, res: Response) {
-        try {
-            const { id } = req.params;
-            const { nomeTopico } = req.body;
-            const topico = await Topico.findOne({ nome: nomeTopico });
 
-            if (topico == null) return res.status(statusCode.bad).send('Não foi encontrado nenhum topico para se inscreer!');
-
-            await Dispositivo.findByIdAndUpdate(id, { $push: { inscricoes: topico.id } });
-
-            return res.status(statusCode.success).send("Inscrição realizada com sucesso!");
-        } catch (error) {
-            return res.status(statusCode.error).send('Ocorreu um error ao subscrever no Topico!');
-        }
     }
 
     public async Publisher(req: Request, res: Response) {
-        try {
-            const { id } = req.params;
-            const { mensagem } = req.body;
 
-            const topico = await Topico.findByIdAndUpdate(id, { $set: { mensagem: mensagem } });
-
-            if(topico == null)  return res.status(statusCode.not_found).send('Ocorreu um Topico não encontrado para publicar!');
-
-            const canal = await Canal.findOne({ topicos: topico.id });
-
-            if(canal == null){
-                return res.status(statusCode.not_found).send('Canal não encontrado para publicar!');
-            }else {
-                if(canal.historico == true){
-                    
-                    const historicoPublicacaoCanal = {
-                        topico: topico.nome,
-                        mensagem: mensagem
-                    }
-                    await Canal.findOneAndUpdate({ nome: canal.nome }, { $push: { historicoPublicacao: historicoPublicacaoCanal } });
-                }
-            }
-            return res.status(statusCode.success).send('Publicação realizada com sucesso!');
-        } catch (error) {
-            return res.status(statusCode.error).send('Ocorreu um error ao publicar no Topico!');
-        }
     }
 }
 

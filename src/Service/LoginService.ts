@@ -55,7 +55,7 @@ class LoginService {
     
             nodemailer.sendMail({
                 to: email,
-                from: "charlesvilela12@gmail.com",
+                from: "testeppoifpe2021@gmail.com",
                 subject: "Você esqueceu a sua senha não se preocupe",
                 text: "Aqui está a sua senha temporária",
                 html: senhaTemporaria

@@ -28,7 +28,18 @@ interface usuarioInterface extends Document {
         lowercase: true,
         minlength: [8, 'A senha não pode ter menos que 8 caracteres'],
         maxlength: [16, 'A senha não pode ter mais que 16 caracteres'],  
-        select: true
+        select: false,
+    },
+    imagemPerfil: {
+        name: {
+            type: String
+        },
+        size: {
+            type: Number
+        },
+        url: {
+            type: String
+        }
     },
     dataHoraRegistro: {
         type: Date,
